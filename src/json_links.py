@@ -4,7 +4,10 @@ import requests
 from requests import exceptions
 import sys
 from time import sleep
+import os
 
+if not os.path.exists(r"db/"):
+    os.makedirs("db/")
 conn = sqlite3.connect(r"db\onedata_db.db")
 
 
@@ -20,12 +23,6 @@ def create_table(conn: sqlite3.Connection):
 
 
 def scrape(conn: sqlite3.Connection):
-    if len(sys.argv) == 1:
-        start_ = 1
-        sleep_ = 1
-    else:
-        start_ = int(sys.argv[1])
-        sleep_ = float(sys.argv[2])
     cursor = conn.cursor()
     max_halaman_web = cursor.execute("SELECT MAX(rowid) FROM halaman_web")
     for data in max_halaman_web:

@@ -3,6 +3,8 @@ from collections import namedtuple
 from datetime import datetime
 import sqlite3
 
+if not os.path.exists(r"db/"):
+    os.makedirs("db/")
 conn = sqlite3.connect(r"db\onedata_db.db")
 
 

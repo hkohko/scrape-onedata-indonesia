@@ -6,6 +6,9 @@ from time import sleep
 from src.max_page import get_maxpage
 from src.page_history import insert_into_page_history
 
+if not os.path.exists(r"db/"):
+    os.makedirs("db/")
+
 conn = sqlite3.connect(r"db\onedata_db.db")
 args = sys.argv
 
