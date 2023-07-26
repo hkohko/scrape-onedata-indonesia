@@ -1,0 +1,11 @@
+# created by virtualenv automatically
+.idea/
+.vs/
+Lib/
+Scripts/
+pyvenv.cfg
+__pycache__/
+*.sqlite
+*.db
+*.db-shm
+*.db-wal
