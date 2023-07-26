@@ -1,7 +1,8 @@
-from bs4 import BeautifulSoup
 import sqlite3
-from requests_cache import CachedSession
 import sys
+import os
+from bs4 import BeautifulSoup
+from requests_cache import CachedSession
 from time import sleep
 from src.max_page import get_maxpage
 from src.page_history import insert_into_page_history

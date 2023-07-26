@@ -1,9 +1,9 @@
+import sqlite3
+import os
 from src import json_links
 from src import scrape_links
 from src.page_history import insert_into_page_history
 from src.max_page import get_maxpage
-import sqlite3
-import os
 from pathlib import Path
 
 os.chdir(Path(__file__).parent)

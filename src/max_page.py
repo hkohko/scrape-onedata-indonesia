@@ -1,7 +1,8 @@
+import re
 from bs4 import BeautifulSoup
 from requests_cache import CachedSession
 from pprint import pprint
-import re
+
 
 
 def get_maxpage():

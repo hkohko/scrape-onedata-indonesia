@@ -1,7 +1,8 @@
+import sqlite3
+import os
 from src.max_page import get_maxpage
 from collections import namedtuple
 from datetime import datetime
-import sqlite3
 
 if not os.path.exists(r"db/"):
     os.makedirs("db/")
