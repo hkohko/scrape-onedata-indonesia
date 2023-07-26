@@ -7,7 +7,8 @@ import os
 from pathlib import Path
 
 os.chdir(Path(__file__).parent)
-
+if not os.path.exists("db"):
+    os.makedirs("db")
 conn = sqlite3.connect(r"db\onedata_db.db")
 
 if __name__ == "__main__":
