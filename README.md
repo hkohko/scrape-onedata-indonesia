@@ -18,7 +18,9 @@ Secara default, akan scraping 5 halaman pertama:
 ```
 python start_scraping.py
 ```
-menerima tiga keyword: mulai, selesai, interval
+menerima tiga keyword: `mulai`, `selesai`, `interval`  
+`mulai, selesai` -> ketik nomor halaman disini  
+`interval` -> float, untuk mengatur interval GET request
 ```
 python start_scraping.py mulai=1 selesai=100 interval=0
 ```
