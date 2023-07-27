@@ -40,7 +40,7 @@ def arguments():
     interval = arg_dict.get("interval")
 
     if mulai and selesai and interval is not None:
-        return int(mulai), int(selesai), float(interval)
+        return abs(int(mulai)), abs(int(selesai)), abs(float(interval))
     else:
         sys.exit(f"\nargumen salah:\n{valid_argument}")
 
@@ -50,16 +50,10 @@ def start_scrape():
         mulai = 1
         selesai = 5
         interval = 0
-        print(f"Default values:\nFirst {selesai} pages\nInterval {interval}s")
-        for i in range(0, 3):
-            print(f"Scraping in {3-i}s", end=" \r")
-            sleep(1)
+        print(f"Default values:\nFirst {selesai} pages\nInterval {interval}s\n")
     else:
         mulai, selesai, interval = arguments()
-        print(f"\nValues:\nhalaman {mulai}-{selesai}\ninterval {interval}s")
-        for i in range(0, 3):
-            print(f"Scraping in {3-i}s", end=" \r")
-            sleep(1)
+        print(f"\nValues:\nhalaman {mulai}-{selesai}\ninterval {interval}s\n")
     scrape_links.scrape(conn, mulai, selesai + 1, interval)
     json_links.scrape(conn, interval)
 
