@@ -7,7 +7,7 @@ scraping dilakukan secara sequential (halaman web terlebih dahulu, baru json lin
 
 # Deskripsi
 
-Aplikasi ini mengumpukan link api json dan menyimpannya dalam database sqlite3  
+Aplikasi CLI ini mengumpukan link api json dan menyimpannya dalam database sqlite3  
 Di dalam database `db\onedata_db.db`ada dua table dengan skema:  
 
 `CREATE TABLE halaman_web(halaman INTEGER,link TEXT, PRIMARY KEY(link))STRICT;`  
