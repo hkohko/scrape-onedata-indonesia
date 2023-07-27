@@ -38,11 +38,10 @@ def arguments():
     mulai = arg_dict.get("mulai")
     selesai = arg_dict.get("selesai")
     interval = arg_dict.get("interval")
-
-    if mulai and selesai and interval is not None:
-        return abs(int(mulai)), abs(int(selesai)), abs(float(interval))
-    else:
+    check_arg = (mulai is None, selesai is None, interval is None)
+    if any(check_arg):
         sys.exit(f"\nargumen salah:\n{valid_argument}")
+    return abs(int(mulai)), abs(int(selesai)), abs(float(interval))
 
 
 def start_scrape():
