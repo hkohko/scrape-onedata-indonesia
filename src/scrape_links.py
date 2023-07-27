@@ -1,17 +1,11 @@
 import sqlite3
-import sys
-import os
 from bs4 import BeautifulSoup
 from requests_cache import CachedSession
 from time import sleep
-from src.max_page import get_maxpage
-from src.page_history import insert_into_page_history
 
-if not os.path.exists(r"db/"):
-    os.makedirs("db/")
 
-conn = sqlite3.connect(r"db\onedata_db.db")
-args = sys.argv
+def db_connect():
+    return sqlite3.connect(r"db\onedata_db.db")
 
 
 def create_table(conn: sqlite3.Connection):
@@ -26,15 +20,11 @@ def create_table(conn: sqlite3.Connection):
     )
 
 
-def scrape(conn: sqlite3.Connection, end_: int):
+def scrape(conn: sqlite3.Connection, mulai: int, selesai: int, interval: int = 0):
     cursor = conn.cursor()
-    if len(start_) == 1:
-        sleep_ = 0
-    else:
-        sleep_ = float(sys.argv[1])
     domain = r"https://katalog.data.go.id"
     scraped_link = []
-    for halaman in range(1, end_):
+    for halaman in range(mulai, selesai):
         print(f"halaman: {halaman}")
         url = f"https://katalog.data.go.id/dataset/?page={halaman}"
         session = CachedSession("scrape_links")
@@ -53,7 +43,7 @@ def scrape(conn: sqlite3.Connection, end_: int):
         insert_into_db(conn, scraped_link)
         print("selesai!")
         scraped_link.clear()
-        sleep(sleep_)
+        sleep(interval)
 
 
 def insert_into_db(conn, data):

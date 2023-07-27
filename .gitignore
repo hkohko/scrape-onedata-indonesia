@@ -1,5 +1,6 @@
 # created by virtualenv automatically
 .idea/
+unused/
 db/
 .vs/
 Lib/

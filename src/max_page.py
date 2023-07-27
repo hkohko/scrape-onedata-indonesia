@@ -4,7 +4,6 @@ from requests_cache import CachedSession
 from pprint import pprint
 
 
-
 def get_maxpage():
     url = r"https://katalog.data.go.id/dataset"
     session = CachedSession("max_links")

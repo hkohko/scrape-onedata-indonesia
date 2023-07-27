@@ -1,24 +1,69 @@
 import sqlite3
 import os
+import sys
+from collections import defaultdict
+from time import sleep
+from src import _initialize
 from src import json_links
 from src import scrape_links
-from src.page_history import insert_into_page_history
-from src.max_page import get_maxpage
+from unused.page_history import insert_into_page_history
 from pathlib import Path
 
 os.chdir(Path(__file__).parent)
-if not os.path.exists(r"db/"):
-    os.makedirs("db/")
+_initialize._init()
 conn = sqlite3.connect(r"db\onedata_db.db")
 
-if __name__ == "__main__":
-    cursor = conn.cursor()
-    live_max_page: int = get_maxpage()
-    for last_page in cursor.execute("SELECT MAX(halaman_terakhir) FROM page_history"):
-        db_last_page = last_page[0]
-    if live_max_page > db_last_page:
-        scrape_links.scrape(conn, live_max_page - db_last_page + 1)
+
+def arguments():
+    arg_dict = defaultdict(str)
+    keywords = ["mulai", "selesai", "interval"]
+    valid_argument = "mulai=<angka>\nselesai=<angka>\ninterval=<angka>\n"
+    args = sys.argv
+    for arg in args:
+        if "=" in arg:
+            key, value = arg.split("=")
+            arg_dict[key.strip()] = value.strip()
+
+    if "" in arg_dict.values() or "" in arg_dict.keys():
+        sys.exit(f"\nargumen tidak lengkap:\n{valid_argument}")
+
+    for key in arg_dict.keys():
+        if key not in keywords:
+            sys.exit(f"\nkeyword argument salah:\n{valid_argument}")
+    try:
+        for values in arg_dict.values():
+            int(values)
+    except ValueError:
+        sys.exit(f"\nparameter bukan angka:\n{valid_argument}")
+
+    mulai = arg_dict.get("mulai")
+    selesai = arg_dict.get("selesai")
+    interval = arg_dict.get("interval")
+
+    if mulai and selesai and interval is not None:
+        return int(mulai), int(selesai), int(interval)
     else:
-        print("db uptodate")
-    insert_into_page_history(conn)
-    json_links.scrape(conn)
+        sys.exit(f"\nargumen salah:\n{valid_argument}")
+
+
+def start_scrape():
+    if len(sys.argv) == 1:
+        mulai = 1
+        selesai = 5
+        interval = 0
+        print(f"Default values:\nFirst {selesai} pages\nInterval {interval}s")
+        for i in range(0, 3):
+            print(f"Scraping in {3-i}s", end=" \r")
+            sleep(1)
+    else:
+        mulai, selesai, interval = arguments()
+        print(f"\nValues:\nhalaman {mulai}-{selesai}\ninterval {interval}s")
+        for i in range(0, 3):
+            print(f"Scraping in {3-i}s", end=" \r")
+            sleep(1)
+    scrape_links.scrape(conn, mulai, selesai + 1, interval)
+    json_links.scrape(conn, interval)
+
+
+if __name__ == "__main__":
+    start_scrape()

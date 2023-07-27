@@ -6,9 +6,9 @@ import sys
 from time import sleep
 import os
 
-if not os.path.exists(r"db/"):
-    os.makedirs("db/")
-conn = sqlite3.connect(r"db\onedata_db.db")
+
+def db_connect():
+    return sqlite3.connect(r"db\onedata_db.db")
 
 
 def create_table(conn: sqlite3.Connection):
@@ -22,14 +22,17 @@ def create_table(conn: sqlite3.Connection):
     )
 
 
-def scrape(conn: sqlite3.Connection):
+def scrape(conn: sqlite3.Connection, sleep_: int):
     cursor = conn.cursor()
     max_halaman_web = cursor.execute("SELECT MAX(rowid) FROM halaman_web")
     for data in max_halaman_web:
         max_value = int(data[0])
     max_json_link = cursor.execute("SELECT MAX(rowid) FROM json_api")
     for num in max_json_link:
-        last_json = int(num[0])
+        if num[0] is None:
+            last_json = 0
+        else:
+            last_json = int(num[0])
     for index in range(last_json, max_value + 1):
         data = cursor.execute(
             "SELECT rowid, link FROM halaman_web WHERE rowid=?", (index,)

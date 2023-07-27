@@ -4,9 +4,9 @@ from src.max_page import get_maxpage
 from collections import namedtuple
 from datetime import datetime
 
-if not os.path.exists(r"db/"):
-    os.makedirs("db/")
-conn = sqlite3.connect(r"db\onedata_db.db")
+
+def db_connect():
+    return sqlite3.connect(r"db\onedata_db.db")
 
 
 def create_table_page_history(conn: sqlite3.Connection):
