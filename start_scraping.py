@@ -6,7 +6,6 @@ from time import sleep
 from src import _initialize
 from src import json_links
 from src import scrape_links
-from unused.page_history import insert_into_page_history
 from pathlib import Path
 
 os.chdir(Path(__file__).parent)

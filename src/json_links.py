@@ -22,7 +22,7 @@ def create_table(conn: sqlite3.Connection):
     )
 
 
-def scrape(conn: sqlite3.Connection, sleep_: int):
+def scrape(conn: sqlite3.Connection, sleep_: int = 0):
     cursor = conn.cursor()
     max_halaman_web = cursor.execute("SELECT MAX(rowid) FROM halaman_web")
     for data in max_halaman_web:
@@ -90,4 +90,4 @@ def insert_into_db(conn: sqlite3.Connection, data: list[tuple]):
 
 
 if __name__ == "__main__":
-    create_table(conn)
+    scrape(db_connect())
