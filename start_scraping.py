@@ -31,7 +31,7 @@ def arguments():
             sys.exit(f"\nkeyword argument salah:\n{valid_argument}")
     try:
         for values in arg_dict.values():
-            int(values)
+            float(values)
     except ValueError:
         sys.exit(f"\nparameter bukan angka:\n{valid_argument}")
 
@@ -40,7 +40,7 @@ def arguments():
     interval = arg_dict.get("interval")
 
     if mulai and selesai and interval is not None:
-        return int(mulai), int(selesai), int(interval)
+        return int(mulai), int(selesai), float(interval)
     else:
         sys.exit(f"\nargumen salah:\n{valid_argument}")
 
