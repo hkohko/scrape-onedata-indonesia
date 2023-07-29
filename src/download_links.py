@@ -80,8 +80,8 @@ def api_call(json_link):
                 sleep(1)
             continue
     response: dict = r.json()
-    result: dict = response.get("result", "")
-    metadata: list = result.get("resources", "")
+    result: dict = response.get("result", {})
+    metadata: list = result.get("resources", [])
     if len(metadata) == 0:
         return "", "", "", ""
     if len(result.get("extras")) == 0:
