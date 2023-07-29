@@ -27,7 +27,7 @@ def scrape(conn: sqlite3.Connection, mulai: int, selesai: int, interval: int = 0
     scraped_link = []
     for halaman in range(mulai, selesai):
         url = f"https://katalog.data.go.id/dataset/?page={halaman}"
-        session = CachedSession("scrape_links")
+        session = CachedSession("scrape_links", expire_after=EXPIRE_IMMEDIATELY)
         response = (session.get(url)).text
         soup = BeautifulSoup(response, "lxml")
         divs = soup.find_all("div", {"class": "module-content"})

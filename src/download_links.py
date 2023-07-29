@@ -9,6 +9,8 @@ from pprint import pprint
 from pathlib import Path
 
 os.chdir(Path(__file__).parent.parent)
+
+
 def db_connect():
     return sqlite3.connect("db/onedata_db.db")
 
@@ -69,6 +71,8 @@ def api_call(json_link):
         try:
             r = requests.get(json_link)
             break
+        except exceptions.MissingSchema:
+            return "", "", "", ""
         except (
             exceptions.ConnectTimeout,
             exceptions.ReadTimeout,
