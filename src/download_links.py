@@ -73,11 +73,19 @@ def api_call(json_link):
                 sleep(1)
             continue
     response: dict = r.json()
-    result: dict = response.get("result")
-    metadata: list = result.get("resources")
-    for dictionary in result.get("extras"):
-        if dictionary.get("key") == "harvest_source_title":
-            sumber_data = dictionary.get("value", "")  # data 1
+    result: dict = response.get("result", "")
+    metadata: list = result.get("resources", "")
+    if len(metadata) == 0:
+        return "", "", "", ""
+    if len(result.get("extras")) == 0:
+        sumber_data = ""
+    else:
+        for dictionary in result.get("extras"):
+            key = dictionary.get("key")
+            if key == "harvest_source_title" and key is not None:
+                sumber_data = dictionary.get("value", "")  # data 1
+            else:
+                sumber_data = ""
     for data in metadata:
         nama_file: str = data.get("name", "")  # data 2
         deskripsi: str = data.get("description", "")  # data 3
