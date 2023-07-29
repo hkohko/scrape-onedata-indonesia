@@ -9,7 +9,8 @@ from pprint import pprint
 from pathlib import Path
 
 os.chdir(Path(__file__).parent.parent)
-conn = sqlite3.connect("db/onedata_db.db")
+def db_connect():
+    return sqlite3.connect("db/onedata_db.db")
 
 
 def create_table(conn: sqlite3.Connection):
@@ -122,4 +123,4 @@ def insert_into_json_metadata(conn: sqlite3.Connection, data):
 
 if __name__ == "__main__":
     # create_table(conn)
-    start_scraping(conn)
+    start_scraping(db_connect())
