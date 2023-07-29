@@ -1,5 +1,6 @@
 # scrape-onedata-indonesia
-scrape link web dan json api link dari katalog.data.go.id/dataset  
+[readme but english](README_EN.md)  
+scrape link web dan json api link dari [katalog.data.go.id/dataset](https://katalog.data.go.id/dataset)  
 
 **menggunakan database sqlite3**
 
