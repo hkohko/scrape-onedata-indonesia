@@ -1,6 +1,7 @@
 from pathlib import Path
 from src import json_links
 from src import scrape_links
+from src import download_links
 import os
 import sqlite3
 
@@ -14,3 +15,4 @@ def _init():
 
     scrape_links.create_table(conn)
     json_links.create_table(conn)
+    download_links.create_table(conn)

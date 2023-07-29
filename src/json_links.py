@@ -1,10 +1,11 @@
-from bs4 import BeautifulSoup
 import sqlite3
 import requests
-from requests import exceptions
 import sys
-from time import sleep
 import os
+from bs4 import BeautifulSoup
+from requests import exceptions
+from time import sleep
+from tqdm import tqdm
 
 
 def db_connect():
@@ -22,7 +23,7 @@ def create_table(conn: sqlite3.Connection):
     )
 
 
-def scrape(conn: sqlite3.Connection, sleep_: int = 0):
+def iterate_db(conn: sqlite3.Connection, sleep_: int = 0):
     cursor = conn.cursor()
     max_halaman_web = cursor.execute("SELECT MAX(rowid) FROM halaman_web")
     for data in max_halaman_web:
@@ -38,20 +39,15 @@ def scrape(conn: sqlite3.Connection, sleep_: int = 0):
             "SELECT rowid, link FROM halaman_web WHERE rowid=?", (index,)
         )
         scraped_json_link = []
-        for rowid, link in data:
-            print(f"rowid: {rowid}")
+        for rowid, link in tqdm(data, desc=f"rowid: {index}"):
             json_link = scrape_json(link)
             scraped_json_link.append((link, json_link))
-            print("selesai!")
-            print("menulis ke db...")
             insert_into_db(conn, scraped_json_link)
-            print("selesai!")
             scraped_json_link.clear()
             sleep(sleep_)
 
 
 def scrape_json(link: str):
-    print(f"link: {link}")
     while True:
         try:
             response = requests.get(link).text
@@ -71,7 +67,6 @@ def scrape_json(link: str):
                 print(f"ConnectTimeOut, will retry in {60-i}s", end=" \r")
                 sleep(1)
             continue
-            # scrape_json(halaman, link)
 
 
 def insert_into_db(conn: sqlite3.Connection, data: list[tuple]):
@@ -90,4 +85,4 @@ def insert_into_db(conn: sqlite3.Connection, data: list[tuple]):
 
 
 if __name__ == "__main__":
-    scrape(db_connect())
+    iterate_db(db_connect())

@@ -18,6 +18,14 @@ def arguments():
     keywords = ["mulai", "selesai", "interval"]
     valid_argument = "mulai=<angka>\nselesai=<angka>\ninterval=<angka>\n"
     args = sys.argv
+
+    if len(args) == 2 and args[1] == "help":
+        print(
+            "\nstart_scraping.py mulai=<angka> selesai=<angka>"
+            "interval=<angka(terima float)>\n"
+        )
+        sys.exit()
+
     for arg in args:
         if "=" in arg:
             key, value = arg.split("=")
@@ -54,7 +62,7 @@ def start_scrape():
         mulai, selesai, interval = arguments()
         print(f"\nValues:\nhalaman {mulai}-{selesai}\ninterval {interval}s\n")
     scrape_links.scrape(conn, mulai, selesai + 1, interval)
-    json_links.scrape(conn, interval)
+    json_links.iterate_db(conn, interval)
 
 
 if __name__ == "__main__":
