@@ -2,6 +2,7 @@ import sqlite3
 import os
 import json
 import requests
+from time import sleep
 from tqdm import tqdm
 from requests import exceptions
 from pprint import pprint
@@ -15,6 +16,7 @@ def create_table(conn: sqlite3.Connection):
     cursor = conn.cursor()
     cursor.execute(
         "CREATE TABLE IF NOT EXISTS json_metadata("
+        "json_api_rowid INTEGER,"
         "sumber_data TEXT,"
         "nama_file TEXT,"
         "deskripsi TEXT,"
@@ -32,7 +34,7 @@ def start_scraping(conn: sqlite3.Connection):
             json_links_max = 0
         else:
             json_links_max = int(num_json[0])
-    json_metadata: int = cursor.execute("SELECT MAX(rowid) FROM json_metadata")
+    json_metadata: int = cursor.execute("SELECT MAX(json_api_rowid) FROM json_metadata")
     for num_metadata in json_metadata:
         if num_metadata[0] is None:
             json_metadata_last = 0
@@ -44,16 +46,20 @@ def start_scraping(conn: sqlite3.Connection):
         )
         result_api_call = []
         for rowid, json_link in tqdm(json_links, desc=f"rowid: {index}"):
-            sumber_data, nama_file, deskripsi, link_dl = api_call(json_link)
-            result_api_call.append(
-                {
-                    "sumber": sumber_data,
-                    "nama": nama_file,
-                    "deskripsi": deskripsi,
-                    "link": link_dl,
-                }
-            )
-            insert_into_json_metadata(conn, result_api_call)
+            api_call_data = api_call(json_link)
+            for sumber_data, nama_file, deskripsi, link_dl in tqdm(
+                api_call_data, desc="fetching data"
+            ):
+                result_api_call.append(
+                    {
+                        "json_api_rowid": rowid,
+                        "sumber": sumber_data,
+                        "nama": nama_file,
+                        "deskripsi": deskripsi,
+                        "link": link_dl,
+                    }
+                )
+                insert_into_json_metadata(conn, result_api_call)
             result_api_call.clear()
 
 
@@ -90,16 +96,18 @@ def api_call(json_link):
         nama_file: str = data.get("name", "")  # data 2
         deskripsi: str = data.get("description", "")  # data 3
         link_download: str = data.get("url", "")  # data 4
-    return sumber_data, nama_file, deskripsi, link_download
+        yield sumber_data, nama_file, deskripsi, link_download
 
 
 def insert_into_json_metadata(conn: sqlite3.Connection, data):
     Q_INSERT_INTO_JSON_METADATA = """INSERT OR IGNORE INTO json_metadata(
+    json_api_rowid,
     sumber_data,
     nama_file,
     deskripsi,
     link_download
     ) VALUES(
+    :json_api_rowid,
     :sumber,
     :nama,
     :deskripsi,
